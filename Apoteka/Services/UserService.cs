@@ -17,6 +17,11 @@ namespace Apoteka.Services
             this.userRepository = userRepository;
         }
 
+        public void BlockUser(User user)
+        {
+            userRepository.BlockUser(user);
+        }
+
         public List<User> GetAllNonBlockedUsers()
         {
             return userRepository.GetAllNonBlockedUsers();
@@ -25,6 +30,16 @@ namespace Apoteka.Services
         public List<User> GetAllUsers()
         {
             return userRepository.GetAllUsers();
+        }
+
+        public void save(User user)
+        {
+            userRepository.save(user);
+        }
+
+        public void UnblockUser(User user)
+        {
+            userRepository.UnblockUser(user);
         }
     }
 }

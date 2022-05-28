@@ -1,5 +1,4 @@
 ﻿using Apoteka.Models;
-using Apoteka.Repositories;
 using Apoteka.Services;
 using System;
 using System.Linq;
@@ -17,10 +16,10 @@ namespace Apoteka.Pages
         private int numberOfLoginsLeft = 3;
         private readonly IUserService _userService;
 
-        public LoginPage(IUserService userService)
+        public LoginPage(CompositeService compositeService)
         {
             InitializeComponent();
-            _userService = userService;
+            _userService = compositeService.UserService;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using Apoteka.Models;
+﻿using Apoteka.Exceptions;
+using Apoteka.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -49,6 +50,23 @@ namespace Apoteka.Repositories
             return users;
         }
 
+        public void save(User user)
+        {
+            var users = GetAllUsers();
+
+            foreach (var fileUser in users)
+            {
+                if (fileUser.JMBG == user.JMBG)
+                    throw new ExistingIdException();
+            }
+
+            using (StreamWriter sw = new StreamWriter(filePath, true))
+            {
+                sw.WriteLine(user.ToString());
+            }
+
+        }
+
         private User parseUserLine(string line)
         {
             var fields = line.Split(",");
@@ -64,6 +82,54 @@ namespace Apoteka.Repositories
             return new User(JMBG, email, password, name, surname, phone, (UserRole)Enum.Parse(typeof(UserRole), role), bool.Parse(blocked));
         }
 
+        public void BlockUser(User user)
+        {
+            var users = GetAllUsers();
+            var modifiedUsers = new List<User>();
 
+            users.ForEach(fileUser =>
+            {
+                if (fileUser.JMBG == user.JMBG) fileUser.Blocked = true;
+                modifiedUsers.Add(fileUser);
+            });
+
+            using (StreamWriter sw = new StreamWriter(filePath, false))
+            {
+                sw.Write("");
+            }
+
+            using (StreamWriter sw = new StreamWriter(filePath, true))
+            {
+                modifiedUsers.ForEach(modifiedUser =>
+                {
+                    sw.WriteLine(modifiedUser);
+                });
+            }
+        }
+
+        public void UnblockUser(User user)
+        {
+            var users = GetAllUsers();
+            var modifiedUsers = new List<User>();
+
+            users.ForEach(fileUser =>
+            {
+                if (fileUser.JMBG == user.JMBG) fileUser.Blocked = false;
+                modifiedUsers.Add(fileUser);
+            });
+
+            using (StreamWriter sw = new StreamWriter(filePath, false))
+            {
+                sw.Write("");
+            }
+
+            using (StreamWriter sw = new StreamWriter(filePath, true))
+            {
+                modifiedUsers.ForEach(modifiedUser =>
+                {
+                    sw.WriteLine(modifiedUser);
+                });
+            }
+        }
     }
 }

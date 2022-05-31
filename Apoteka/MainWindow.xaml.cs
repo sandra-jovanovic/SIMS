@@ -33,12 +33,14 @@ namespace Apoteka
             IUserRepository userRepository = new UserRepository();
             IMedicineRepository medicineRepository = new MedicineRepository();
             IAcceptanceRepository acceptanceRepository = new AcceptanceRepository();
+            IIngredientRepository ingredientRepository = new IngredientRepository();
 
             IUserService userService = new UserService(userRepository);
             IMedicineService medicineService = new MedicineService(medicineRepository);
             IAcceptanceService acceptanceService = new AcceptanceService(acceptanceRepository);
+            IIngredientsService ingredientsService = new IngredientsService(ingredientRepository);
 
-            return new CompositeService(userService, medicineService, acceptanceService);
+            return new CompositeService(userService, medicineService, acceptanceService, ingredientsService);
 
         }
     }

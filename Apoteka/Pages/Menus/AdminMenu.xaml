@@ -1,0 +1,24 @@
+﻿<Page x:Class="Apoteka.Pages.Menus.AdminMenu"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Apoteka.Pages.Menus"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="AdminMenu">
+
+    <Grid Background="BlueViolet">
+        <Label Content="Upravnik" HorizontalAlignment="Left" Foreground="White" Margin="310,10,0,0" VerticalAlignment="Top" FontSize="48" FontWeight="Bold"/>
+        <Button x:Name="btnRegistration" Foreground="White" Background="Orange" Content="Registracija" HorizontalAlignment="Left" VerticalAlignment="Top" Height="145" Width="210" FontSize="18" FontWeight="Bold" Margin="64,111,0,0" Click="btnRegistration_Click"/>
+        <Button x:Name="btnUsersOverview" Foreground="White" Background="Orange" Content="Pregled korisnika" HorizontalAlignment="Left" VerticalAlignment="Top" Height="145" Width="210" FontSize="18" FontWeight="Bold" Margin="315,111,0,0" Click="btnUsersOverview_Click"/>
+        <Button x:Name="btnNewMedicine" Foreground="White" Background="Orange" Content="Unos novog leka" HorizontalAlignment="Left" VerticalAlignment="Top" Height="145" Width="210" FontSize="18" FontWeight="Bold" Margin="560,111,0,0" Click="btnNewMedicine_Click"/>
+        <Button x:Name="btnMedicinesOverview" Foreground="White" Background="Orange" HorizontalAlignment="Left" VerticalAlignment="Top" Height="145" Width="210" FontSize="18" FontWeight="Bold" Margin="64,283,0,0" Click="btnMedicinesOverview_Click">
+            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Center" FontWeight="Bold" Width="112" FontSize="20">
+                Pregled prihvaćenih lekova
+            </TextBlock>
+        </Button>
+        <Button x:Name="btnOrderMedicines" Foreground="White" Background="Orange" Content="Poručivanje lekova" HorizontalAlignment="Left" VerticalAlignment="Top" Height="145" Width="210" FontSize="18" FontWeight="Bold" Margin="315,283,0,0" Click="btnOrderMedicines_Click"/>
+
+    </Grid>
+</Page>

@@ -13,6 +13,7 @@ namespace Apoteka.Util
         private readonly IUserService _userService;
         private readonly IMedicineService _medicineService;
         private readonly IAcceptanceService _acceptanceService;
+        private readonly IIngredientsService _ingredientService;
 
         public NavigationManager(Frame mainFrame, User user, CompositeService compositeService)
         {
@@ -21,6 +22,7 @@ namespace Apoteka.Util
             _userService = compositeService.UserService;
             _medicineService = compositeService.MedicineService;
             _acceptanceService = compositeService.AcceptanceService;
+            _ingredientService = compositeService.IngredientsService;
 
             switch (user.Role)
             {
@@ -30,9 +32,50 @@ namespace Apoteka.Util
                 case UserRole.Lekar:
                     HandleNavigationForDoctor();
                     break;
+                case UserRole.Upravnik:
+                    HandleNavigationForAdmin();
+                    break;
                 default:
                     break;
             }
+        }
+
+        private void HandleNavigationForAdmin()
+        {
+            var adminMenu = new AdminMenu();
+
+            adminMenu.registrationButtonClicked += () =>
+            {
+                var page = new RegistrationPage(_userService);
+                page.BackButtonClicked += () => HandleNavigationForAdmin();
+                mainFrame.Content = page;
+            };
+
+            adminMenu.usersOverviewButtonClicked += () =>
+            {
+                var page = new UsersOverviewPage(_userService);
+                page.BackButtonClicked += () => HandleNavigationForAdmin();
+                mainFrame.Content = page;
+            };
+
+            adminMenu.newMedicneButtonClicked += () =>
+            {
+                var page = new NewMedicinePage(_ingredientService, _medicineService);
+                page.BackButtonClicked += () => HandleNavigationForAdmin();
+                mainFrame.Content = page;
+            };
+
+            adminMenu.medicinesOverviewButtonClicked += () =>
+            {
+                var page = new AcceptedMedicinesOverviewPage(_medicineService);
+                page.BackButtonPressed += () => HandleNavigationForAdmin();
+                mainFrame.Content = page;
+            };
+
+            adminMenu.medicinesOrderingButtonClicked += () =>
+            {};
+
+            mainFrame.Content = adminMenu;
         }
 
         private void HandleNavigationForDoctor()

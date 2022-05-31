@@ -1,0 +1,43 @@
+﻿<Page x:Class="Apoteka.Pages.NewMedicinePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Apoteka.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="NewMedicinePage">
+
+    <Grid Background="BlueViolet">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+
+        <Button x:Name="btnBack" Content="Nazad" HorizontalAlignment="Left" Margin="20,11,0,0" VerticalAlignment="Top" Width="47" Background="Black" Foreground="White" Click="btnBack_Click"/>
+        <Label Content="Dodavanje novog leka" Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold"/>
+
+        <Label Content="Šifra" Foreground="White" HorizontalAlignment="Left" Margin="214,58,0,0" VerticalAlignment="Top" FontSize="16" Grid.RowSpan="2"/>
+        <TextBox x:Name="txtId" HorizontalAlignment="Left" Margin="145,19,0,0" Text="" VerticalAlignment="Top" Width="191" TextWrapping="NoWrap" Grid.Row="1" />
+
+        <Label Content="Naziv" Foreground="White" HorizontalAlignment="Left" Margin="214,37,0,0" VerticalAlignment="Top" FontSize="16" Grid.Row="1"/>
+        <TextBox x:Name="txtName" HorizontalAlignment="Left" Margin="144,73,0,0" Text="" VerticalAlignment="Top" Width="191" TextWrapping="NoWrap" Grid.Row="1" />
+
+        <Label Content="Proizvođač" Foreground="White" HorizontalAlignment="Left" Margin="195,97,0,0" VerticalAlignment="Top" FontSize="16" Grid.Row="1"/>
+        <TextBox x:Name="txtManufacturer" HorizontalAlignment="Left" Margin="144,127,0,0" Text="" VerticalAlignment="Top" Width="192" TextWrapping="NoWrap" Grid.Row="1" />
+
+        <Label Content="Količina" Foreground="White" HorizontalAlignment="Left" Margin="206,151,0,0" VerticalAlignment="Top" FontSize="16" Grid.Row="1"/>
+        <TextBox x:Name="txtQuantity" HorizontalAlignment="Left" Margin="143,187,0,0" Text="" VerticalAlignment="Top" Width="191" TextWrapping="NoWrap" Grid.Row="1" />
+
+        <ListBox x:Name="lbIngredients" Margin="400,19,32,224" SelectionMode="Multiple" Grid.Row="1" />
+        <Label Content="Sastojci" Foreground="White" HorizontalAlignment="Left" Margin="552,58,0,0" VerticalAlignment="Top" FontSize="16" Grid.RowSpan="2"/>
+
+        <Label Content="Cena" Foreground="White" HorizontalAlignment="Left" Margin="217,210,0,0" VerticalAlignment="Top" FontSize="16" Grid.Row="1"/>
+        <TextBox x:Name="txtPrice" HorizontalAlignment="Left" Margin="145,246,0,0" Text="" VerticalAlignment="Top" Width="191" TextWrapping="NoWrap" Grid.Row="1" />
+
+        <Button x:Name="btnConfirm" Content="Potvrdi" Foreground="White" Background="Orange" Padding="5 5 5 5" HorizontalAlignment="Left" Margin="552,239,0,0" VerticalAlignment="Top" FontSize="18" FontWeight="Bold" Click="btnConfirm_Click" Grid.Row="1"/>
+
+        <Label x:Name="lbError" Foreground="White" Background="Red" Content="" HorizontalAlignment="Left" Margin="143,305,0,0" VerticalAlignment="Top" Width="550" FontSize="15" Visibility="Hidden" Grid.Row="1" />
+
+    </Grid>
+</Page>

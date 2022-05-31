@@ -1,0 +1,24 @@
+﻿<Page x:Class="Apoteka.Pages.MedicineOrderingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Apoteka.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="MedicineOrderingPage">
+
+    <Grid Background="BlueViolet">
+        <Label Content="Poručivanje leka" Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold"/>
+        <ComboBox x:Name="cbMedicines" HorizontalAlignment="Left" Margin="431,125,0,0" VerticalAlignment="Top" Width="120" DisplayMemberPath="Name" />
+        <Label Content="Izaberite lek" Foreground="White" HorizontalAlignment="Left" Margin="280,120,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Content="Unesite količinu" Foreground="White" HorizontalAlignment="Center" Margin="0,179,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <TextBox x:Name="txtQuantity" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" Margin="0,210,0,0"/>
+        <Button x:Name="btnConfirm" Content="Potvrdi" Padding="5 5 5 5" HorizontalAlignment="Center" Margin="0,361,0,0" VerticalAlignment="Top" FontSize="14" Background="Orange" Foreground="White" FontWeight="Bold" Click="btnConfirm_Click" />
+        <Label x:Name="lblError" Content="" Background="Red" Foreground="White" HorizontalAlignment="Left" Margin="226,382,0,0" VerticalAlignment="Top" Width="341" Visibility="Hidden"/>
+        <Button x:Name="btnBack" Content="Nazad" HorizontalAlignment="Left" Margin="20,11,0,0" VerticalAlignment="Top" Width="47" Background="Black" Foreground="White" Click="btnBack_Click"/>
+        <Label Content="Datum poručivanja" Foreground="White" HorizontalAlignment="Center" Margin="0,259,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <DatePicker x:Name="dpOrderScheduling" HorizontalAlignment="Center" Margin="0,295,0,0" VerticalAlignment="Top" />
+
+    </Grid>
+</Page>

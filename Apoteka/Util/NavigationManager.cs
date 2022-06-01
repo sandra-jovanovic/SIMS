@@ -14,6 +14,7 @@ namespace Apoteka.Util
         private readonly IMedicineService _medicineService;
         private readonly IAcceptanceService _acceptanceService;
         private readonly IIngredientsService _ingredientService;
+        private readonly ISchedulingService _schedulingService;
 
         public NavigationManager(Frame mainFrame, User user, CompositeService compositeService)
         {
@@ -22,6 +23,7 @@ namespace Apoteka.Util
             _userService = compositeService.UserService;
             _medicineService = compositeService.MedicineService;
             _acceptanceService = compositeService.AcceptanceService;
+            _schedulingService = compositeService.SchedulingService;
             _ingredientService = compositeService.IngredientsService;
 
             switch (user.Role)
@@ -73,7 +75,11 @@ namespace Apoteka.Util
             };
 
             adminMenu.medicinesOrderingButtonClicked += () =>
-            {};
+            {
+                var page = new MedicineOrderingPage(_medicineService, _schedulingService);
+                page.BackButtonClicked += () => HandleNavigationForAdmin();
+                mainFrame.Content = page;
+            };
 
             mainFrame.Content = adminMenu;
         }

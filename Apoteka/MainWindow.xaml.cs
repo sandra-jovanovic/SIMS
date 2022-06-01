@@ -26,21 +26,29 @@ namespace Apoteka
             {
                 var navigationManager = new NavigationManager(mainFrame, user, compositeService);
             };
+
+            var numberOfOrderingsDone = compositeService.SchedulingService.OrderAllMedicinesScheduledForTodayOrForPreviousPeriod();
+            if (numberOfOrderingsDone > 0)
+            {
+                MessageBox.Show($"Uspešno izvršeno {numberOfOrderingsDone} porudžbina");
+            }
         }
 
         private CompositeService InitializeServices()
         {
             IUserRepository userRepository = new UserRepository();
             IMedicineRepository medicineRepository = new MedicineRepository();
+            ISchedulingRepository schedulingRepository = new SchedulingRepository();
             IAcceptanceRepository acceptanceRepository = new AcceptanceRepository();
             IIngredientRepository ingredientRepository = new IngredientRepository();
 
             IUserService userService = new UserService(userRepository);
             IMedicineService medicineService = new MedicineService(medicineRepository);
+            ISchedulingService schedulingService = new SchedulingService(schedulingRepository, medicineRepository);
             IAcceptanceService acceptanceService = new AcceptanceService(acceptanceRepository);
             IIngredientsService ingredientsService = new IngredientsService(ingredientRepository);
 
-            return new CompositeService(userService, medicineService, acceptanceService, ingredientsService);
+            return new CompositeService(userService, medicineService, acceptanceService, ingredientsService, schedulingService);
 
         }
     }

@@ -2,6 +2,7 @@
 using Apoteka.Models;
 using Apoteka.Services;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,7 +22,11 @@ namespace Apoteka.Pages
 
             this._userService = userService;
 
-            cbUserRole.ItemsSource = Enum.GetValues(typeof(UserRole));
+            cbUserRole.ItemsSource = new List<UserRole>
+            {
+                UserRole.Lekar,
+                UserRole.Farmaceut
+            };
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

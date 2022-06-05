@@ -42,6 +42,11 @@ namespace Apoteka.Pages
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
+            if (!dgMedicines.IsLoaded)
+            {
+                return;
+            }
+
             Medicine medicine = (Medicine)((CheckBox)e.Source).DataContext;
             var medicineApproved = _acceptanceService.AcceptMedicineByUser(user.JMBG, medicine.Id, user.Role == UserRole.Lekar);
             if (medicineApproved)
@@ -54,12 +59,22 @@ namespace Apoteka.Pages
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
+            if (!dgMedicines.IsLoaded)
+            {
+                return;
+            }
+
             Medicine medicine = (Medicine)((CheckBox)e.Source).DataContext;
             _acceptanceService.RevokeMedicineAcceptanceByUser(user.JMBG, medicine.Id);
         }
 
         private void CheckBox_Checked_1(object sender, RoutedEventArgs e)
         {
+            if (!dgMedicines.IsLoaded)
+            {
+                return;
+            }
+
             var dialog = new ConfirmRefusingMedicineDialog();
 
             if (dialog.ShowDialog() == true)

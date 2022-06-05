@@ -41,6 +41,11 @@ namespace Apoteka.Pages
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
+            if (!dgUsers.IsLoaded)
+            {
+                return;
+            }
+
             User user = (User)((CheckBox)e.Source).DataContext;
 
             _userService.BlockUser(user);
@@ -53,6 +58,11 @@ namespace Apoteka.Pages
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
+            if (!dgUsers.IsLoaded)
+            {
+                return;
+            }
+
             User user = (User)((CheckBox)e.Source).DataContext;
 
             _userService.UnblockUser(user);

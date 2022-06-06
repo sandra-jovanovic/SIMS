@@ -59,6 +59,12 @@ namespace Apoteka.Pages
                 lblError.Visibility = Visibility.Visible;
                 return;
             }
+            catch (ExistingEmailException ex)
+            {
+                lblError.Content = "Korisnik sa unetim imejlom već postoji";
+                lblError.Visibility = Visibility.Visible;
+                return;
+            }
 
             MessageBox.Show("Korisnik uspešno sačuvan");
 

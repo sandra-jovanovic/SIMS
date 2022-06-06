@@ -58,6 +58,9 @@ namespace Apoteka.Repositories
             {
                 if (fileUser.JMBG == user.JMBG)
                     throw new ExistingIdException();
+
+                if (fileUser.Email.Equals(user.Email))
+                    throw new ExistingEmailException();
             }
 
             using (StreamWriter sw = new StreamWriter(filePath, true))

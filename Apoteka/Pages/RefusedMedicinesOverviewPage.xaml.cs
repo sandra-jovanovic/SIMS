@@ -1,6 +1,7 @@
 ﻿using Apoteka.Constants;
 using Apoteka.Models;
 using Apoteka.Services;
+using Apoteka.Util;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -119,7 +120,7 @@ namespace Apoteka.Pages
                     break;
 
                 case MedicineSeachingFilters.INGREDIENTS:
-
+                    dgMedicines.ItemsSource = SearchingHelper.GetMedicinesUsingIngredientsFilter(medicines, userInput);
                     break;
             }
         }

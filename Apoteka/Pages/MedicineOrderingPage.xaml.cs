@@ -57,7 +57,7 @@ namespace Apoteka.Pages
             }
             catch
             {
-                lblError.Content = "Unteta količina mora da bude brojna vrednost veća od 0";
+                lblError.Content = "Uneta količina mora da bude brojna vrednost veća od 0";
                 lblError.Visibility = Visibility.Visible;
                 return;
             }

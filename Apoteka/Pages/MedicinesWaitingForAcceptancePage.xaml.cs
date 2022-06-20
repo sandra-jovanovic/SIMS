@@ -1,4 +1,5 @@
-﻿using Apoteka.Dialogs;
+﻿using Apoteka.Controllers;
+using Apoteka.Dialogs;
 using Apoteka.Models;
 using Apoteka.Services;
 using System;
@@ -16,20 +17,20 @@ namespace Apoteka.Pages
     public partial class MedicinesWaitingForAcceptancePage : Page
     {
         private readonly User user;
-        private readonly IMedicineService _medicineService;
-        private readonly IAcceptanceService _acceptanceService;
+        private readonly IMedicineController _medicineController;
+        private readonly IAcceptanceController _acceptanceController;
         private List<Medicine> medicines;
         public event Action backButtonClicked;
 
-        public MedicinesWaitingForAcceptancePage(User user, IMedicineService medicineService, IAcceptanceService acceptanceService)
+        public MedicinesWaitingForAcceptancePage(User user, IMedicineController medicineService, IAcceptanceController acceptanceService)
         {
             InitializeComponent();
             this.user = user;
-            this._medicineService = medicineService;
-            this._acceptanceService = acceptanceService;
+            this._medicineController = medicineService;
+            this._acceptanceController = acceptanceService;
 
-            this.medicines = this._medicineService.GetNotAcceptedMedicines();
-            var acceptances = _acceptanceService.GetAcceptancesByUser(user.JMBG);
+            this.medicines = this._medicineController.GetNotAcceptedMedicines();
+            var acceptances = _acceptanceController.GetAcceptancesByUser(user.JMBG);
 
             this.medicines.ForEach(medicine =>
             {
@@ -48,10 +49,10 @@ namespace Apoteka.Pages
             }
 
             Medicine medicine = (Medicine)((CheckBox)e.Source).DataContext;
-            var medicineApproved = _acceptanceService.AcceptMedicineByUser(user.JMBG, medicine.Id, user.Role == UserRole.Lekar);
+            var medicineApproved = _acceptanceController.AcceptMedicineByUser(user.JMBG, medicine.Id, user.Role == UserRole.Lekar);
             if (medicineApproved)
             {
-                _medicineService.MarkMedicineAsApproved(medicine.Id);
+                _medicineController.MarkMedicineAsApproved(medicine.Id);
                 this.medicines = this.medicines.FindAll(iter => iter.Id != medicine.Id);
                 dgMedicines.ItemsSource = this.medicines;
             }
@@ -65,7 +66,7 @@ namespace Apoteka.Pages
             }
 
             Medicine medicine = (Medicine)((CheckBox)e.Source).DataContext;
-            _acceptanceService.RevokeMedicineAcceptanceByUser(user.JMBG, medicine.Id);
+            _acceptanceController.RevokeMedicineAcceptanceByUser(user.JMBG, medicine.Id);
         }
 
         private void CheckBox_Checked_1(object sender, RoutedEventArgs e)
@@ -82,8 +83,8 @@ namespace Apoteka.Pages
                 Medicine medicine = (Medicine)((CheckBox)e.Source).DataContext;
                 this.medicines = medicines.Where(x => x.Id != medicine.Id).ToList();
                 dgMedicines.ItemsSource = this.medicines;
-                _medicineService.SetMedicineRefused(medicine.Id, dialog.ResponseText, $"{user.Name} {user.Surname}");
-                _acceptanceService.DeleteAllAcceptancesForMedicine(medicine.Id);
+                _medicineController.SetMedicineRefused(medicine.Id, dialog.ResponseText, $"{user.Name} {user.Surname}");
+                _acceptanceController.DeleteAllAcceptancesForMedicine(medicine.Id);
             }
 
             ((CheckBox)sender).IsChecked = false;

@@ -1,4 +1,5 @@
-﻿using Apoteka.Models;
+﻿using Apoteka.Controllers;
+using Apoteka.Models;
 using Apoteka.Services;
 using System;
 using System.Collections.Generic;
@@ -12,15 +13,15 @@ namespace Apoteka.Pages
     /// </summary>
     public partial class UsersOverviewPage : Page
     {
-        private readonly IUserService _userService;
+        private readonly IUserController _userController;
         private List<User> users;
 
         public event Action BackButtonClicked;
-        public UsersOverviewPage(IUserService userService)
+        public UsersOverviewPage(IUserController userService)
         {
             InitializeComponent();
-            this._userService = userService;
-            users = _userService.GetAllUsers();
+            this._userController = userService;
+            users = _userController.GetAllUsers();
 
             dgUsers.ItemsSource = users;
 
@@ -48,7 +49,7 @@ namespace Apoteka.Pages
 
             User user = (User)((CheckBox)e.Source).DataContext;
 
-            _userService.BlockUser(user);
+            _userController.BlockUser(user);
 
             users.ForEach(iterUser =>
             {
@@ -65,7 +66,7 @@ namespace Apoteka.Pages
 
             User user = (User)((CheckBox)e.Source).DataContext;
 
-            _userService.UnblockUser(user);
+            _userController.UnblockUser(user);
 
             users.ForEach(iterUser =>
             {

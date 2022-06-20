@@ -1,4 +1,5 @@
 ﻿using Apoteka.Constants;
+using Apoteka.Controllers;
 using Apoteka.Models;
 using Apoteka.Services;
 using Apoteka.Util;
@@ -25,18 +26,18 @@ namespace Apoteka.Pages
         };
         private List<Medicine> medicines;
         private readonly User user;
-        private readonly IMedicineService _medicineService;
-        private readonly IAcceptanceService _acceptanceService;
+        private readonly IMedicineController _medicineController;
+        private readonly IAcceptanceController _acceptanceController;
 
         public event Action BackButtonPressed;
 
-        public RefusedMedicinesOverviewPage(User user, IMedicineService medicineService, IAcceptanceService acceptanceService)
+        public RefusedMedicinesOverviewPage(User user, IMedicineController medicineController, IAcceptanceController acceptanceController)
         {
             InitializeComponent();
             this.user = user;
-            this._medicineService = medicineService;
-            this._acceptanceService = acceptanceService;
-            this.medicines = this._medicineService.GetRefusedMedicines();
+            this._medicineController = medicineController;
+            this._acceptanceController = acceptanceController;
+            this.medicines = this._medicineController.GetRefusedMedicines();
 
             dgMedicines.ItemsSource = medicines;
 
@@ -133,8 +134,8 @@ namespace Apoteka.Pages
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             Medicine medicine = (Medicine)((CheckBox)e.Source).DataContext;
-            _acceptanceService.AcceptMedicineByUser(user.JMBG, medicine.Id, user.Role == UserRole.Lekar);
-            _medicineService.UnmarkMedicineAsRefused(medicine.Id);
+            _acceptanceController.AcceptMedicineByUser(user.JMBG, medicine.Id, user.Role == UserRole.Lekar);
+            _medicineController.UnmarkMedicineAsRefused(medicine.Id);
             this.medicines = this.medicines.FindAll(iter => iter.Id != medicine.Id);
             dgMedicines.ItemsSource = medicines;
         }

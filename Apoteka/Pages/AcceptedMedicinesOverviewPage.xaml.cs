@@ -1,4 +1,5 @@
 ﻿using Apoteka.Constants;
+using Apoteka.Controllers;
 using Apoteka.Models;
 using Apoteka.Services;
 using Apoteka.Util;
@@ -25,10 +26,10 @@ namespace Apoteka.Pages
             MedicineSeachingFilters.INGREDIENTS
         };
         private readonly List<Medicine> medicines;
-        private readonly IMedicineService _medicineService;
+        private readonly IMedicineController _medicineService;
         public event Action BackButtonPressed;
 
-        public AcceptedMedicinesOverviewPage(IMedicineService medicineService)
+        public AcceptedMedicinesOverviewPage(IMedicineController medicineService)
         {
             InitializeComponent();
             this._medicineService = medicineService;

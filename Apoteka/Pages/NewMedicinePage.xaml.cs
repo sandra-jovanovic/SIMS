@@ -1,4 +1,5 @@
-﻿using Apoteka.Exceptions;
+﻿using Apoteka.Controllers;
+using Apoteka.Exceptions;
 using Apoteka.Models;
 using Apoteka.Services;
 using System;
@@ -13,16 +14,16 @@ namespace Apoteka.Pages
     /// </summary>
     public partial class NewMedicinePage : Page
     {
-        private readonly IMedicineService _medicineService;
-        private readonly IIngredientsService _ingredientsService;
+        private readonly IMedicineController _medicineController;
+        private readonly IIngredientsController _ingredientsController;
 
         public event Action BackButtonClicked;
-        public NewMedicinePage(IIngredientsService ingredientsService, IMedicineService medicineService)
+        public NewMedicinePage(IIngredientsController ingredientsService, IMedicineController medicineService)
         {
             InitializeComponent();
-            this._medicineService = medicineService;
-            this._ingredientsService = ingredientsService;
-            lbIngredients.ItemsSource = _ingredientsService.GetAllIngredients();
+            this._medicineController = medicineService;
+            this._ingredientsController = ingredientsService;
+            lbIngredients.ItemsSource = _ingredientsController.GetAllIngredients();
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -76,7 +77,7 @@ namespace Apoteka.Pages
 
             try
             {
-                _medicineService.AddMedicine(newMedicine);
+                _medicineController.AddMedicine(newMedicine);
             }
             catch (ExistingIdException ex)
             {

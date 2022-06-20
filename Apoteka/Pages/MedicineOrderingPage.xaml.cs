@@ -1,4 +1,5 @@
-﻿using Apoteka.Models;
+﻿using Apoteka.Controllers;
+using Apoteka.Models;
 using Apoteka.Services;
 using System;
 using System.Windows;
@@ -11,16 +12,16 @@ namespace Apoteka.Pages
     /// </summary>
     public partial class MedicineOrderingPage : Page
     {
-        private readonly IMedicineService _medicineService;
-        private readonly ISchedulingService _schedulingService;
+        private readonly IMedicineController _medicineController;
+        private readonly ISchedulingController _schedulingController;
 
         public event Action BackButtonClicked;
-        public MedicineOrderingPage(IMedicineService medicineService, ISchedulingService schedulingService)
+        public MedicineOrderingPage(IMedicineController medicineService, ISchedulingController schedulingService)
         {
             InitializeComponent();
-            this._medicineService = medicineService;
-            this._schedulingService = schedulingService;
-            cbMedicines.ItemsSource = _medicineService.GetAllAcceptedMedicines();
+            this._medicineController = medicineService;
+            this._schedulingController = schedulingService;
+            cbMedicines.ItemsSource = _medicineController.GetAllAcceptedMedicines();
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)
@@ -81,14 +82,14 @@ namespace Apoteka.Pages
 
         private void OrderNow(Medicine medicine, int quantity)
         {
-            _medicineService.IncreaseMedicineQuantity(medicine.Id, quantity);
+            _medicineController.IncreaseMedicineQuantity(medicine.Id, quantity);
 
             MessageBox.Show("Količina je uspešno nabavljena");
         }
 
         private void ScheduleOrdering(Medicine medicine, int quantity, DateTime scheduledDate)
         {
-            _schedulingService.ScheduleOrderingForDate(new ScheduledMedicineOrdering(scheduledDate, medicine.Id, quantity));
+            _schedulingController.ScheduleOrderingForDate(new ScheduledMedicineOrdering(scheduledDate, medicine.Id, quantity));
             MessageBox.Show($"Nabavka je sačuvana za datum {scheduledDate}");
         }
     }

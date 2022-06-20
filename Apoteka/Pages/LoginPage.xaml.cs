@@ -1,4 +1,5 @@
-﻿using Apoteka.Models;
+﻿using Apoteka.Controllers;
+using Apoteka.Models;
 using Apoteka.Services;
 using System;
 using System.Linq;
@@ -14,12 +15,12 @@ namespace Apoteka.Pages
     {
         public event Action<User> SuccessfullyLoggedIn;
         private int numberOfLoginsLeft = 3;
-        private readonly IUserService _userService;
+        private readonly IUserController _userController;
 
-        public LoginPage(CompositeService compositeService)
+        public LoginPage(CompositeController compositeController)
         {
             InitializeComponent();
-            _userService = compositeService.UserService;
+            _userController = compositeController.UserController;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -49,7 +50,7 @@ namespace Apoteka.Pages
 
         private User authenticateUser(string email, string password)
         {
-            var users = _userService.GetAllNonBlockedUsers();
+            var users = _userController.GetAllNonBlockedUsers();
             var user = users.FirstOrDefault(user => user.Email == email && user.Password == password);
 
             return user;

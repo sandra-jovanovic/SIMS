@@ -1,4 +1,5 @@
-﻿using Apoteka.Models;
+﻿using Apoteka.Controllers;
+using Apoteka.Models;
 using Apoteka.Pages;
 using Apoteka.Pages.Menus;
 using Apoteka.Services;
@@ -10,21 +11,21 @@ namespace Apoteka.Util
     {
         private Frame mainFrame;
         private readonly User user;
-        private readonly IUserService _userService;
-        private readonly IMedicineService _medicineService;
-        private readonly IAcceptanceService _acceptanceService;
-        private readonly IIngredientsService _ingredientService;
-        private readonly ISchedulingService _schedulingService;
+        private readonly IUserController _userController;
+        private readonly IMedicineController _medicineController;
+        private readonly IAcceptanceController _acceptanceController;
+        private readonly IIngredientsController _ingredientController;
+        private readonly ISchedulingController _schedulingController;
 
-        public NavigationManager(Frame mainFrame, User user, CompositeService compositeService)
+        public NavigationManager(Frame mainFrame, User user, CompositeController compositeController)
         {
             this.mainFrame = mainFrame;
             this.user = user;
-            _userService = compositeService.UserService;
-            _medicineService = compositeService.MedicineService;
-            _acceptanceService = compositeService.AcceptanceService;
-            _schedulingService = compositeService.SchedulingService;
-            _ingredientService = compositeService.IngredientsService;
+            _userController = compositeController.UserController;
+            _medicineController = compositeController.MedicineController;
+            _acceptanceController = compositeController.AcceptanceController;
+            _schedulingController = compositeController.SchedulingController;
+            _ingredientController = compositeController.IngredientsController;
 
             switch (user.Role)
             {
@@ -48,35 +49,35 @@ namespace Apoteka.Util
 
             adminMenu.registrationButtonClicked += () =>
             {
-                var page = new RegistrationPage(_userService);
+                var page = new RegistrationPage(_userController);
                 page.BackButtonClicked += () => HandleNavigationForAdmin();
                 mainFrame.Content = page;
             };
 
             adminMenu.usersOverviewButtonClicked += () =>
             {
-                var page = new UsersOverviewPage(_userService);
+                var page = new UsersOverviewPage(_userController);
                 page.BackButtonClicked += () => HandleNavigationForAdmin();
                 mainFrame.Content = page;
             };
 
             adminMenu.newMedicneButtonClicked += () =>
             {
-                var page = new NewMedicinePage(_ingredientService, _medicineService);
+                var page = new NewMedicinePage(_ingredientController, _medicineController);
                 page.BackButtonClicked += () => HandleNavigationForAdmin();
                 mainFrame.Content = page;
             };
 
             adminMenu.medicinesOverviewButtonClicked += () =>
             {
-                var page = new AcceptedMedicinesOverviewPage(_medicineService);
+                var page = new AcceptedMedicinesOverviewPage(_medicineController);
                 page.BackButtonPressed += () => HandleNavigationForAdmin();
                 mainFrame.Content = page;
             };
 
             adminMenu.medicinesOrderingButtonClicked += () =>
             {
-                var page = new MedicineOrderingPage(_medicineService, _schedulingService);
+                var page = new MedicineOrderingPage(_medicineController, _schedulingController);
                 page.BackButtonClicked += () => HandleNavigationForAdmin();
                 mainFrame.Content = page;
             };
@@ -90,14 +91,14 @@ namespace Apoteka.Util
 
             doctorMenu.AllMedicinesButtonClicked += () =>
             {
-                var page = new AcceptedMedicinesOverviewPage(_medicineService);
+                var page = new AcceptedMedicinesOverviewPage(_medicineController);
                 page.BackButtonPressed += () => HandleNavigationForDoctor();
                 mainFrame.Content = page;
             };
 
             doctorMenu.AcceptOrRefuseMedicinesButtonClicked += () =>
             {
-                var page = new MedicinesWaitingForAcceptancePage(user, _medicineService, _acceptanceService);
+                var page = new MedicinesWaitingForAcceptancePage(user, _medicineController, _acceptanceController);
                 page.backButtonClicked += () => HandleNavigationForDoctor();
                 mainFrame.Content = page;
             };
@@ -111,21 +112,21 @@ namespace Apoteka.Util
 
             pharmacisMenu.AllMedicinesButtonClicked += () =>
             {
-                var page = new AcceptedMedicinesOverviewPage(_medicineService);
+                var page = new AcceptedMedicinesOverviewPage(_medicineController);
                 page.BackButtonPressed += () => HandleNavigationForPharmacist();
                 mainFrame.Content = page;
             };
 
             pharmacisMenu.AcceptOrRefuseMedicinesButtonClicked += () =>
             {
-                var page = new MedicinesWaitingForAcceptancePage(user, _medicineService, _acceptanceService);
+                var page = new MedicinesWaitingForAcceptancePage(user, _medicineController, _acceptanceController);
                 page.backButtonClicked += () => HandleNavigationForPharmacist();
                 mainFrame.Content = page;
             };
 
             pharmacisMenu.RefusedMedicinesButtonClicked += () =>
             {
-                var page = new RefusedMedicinesOverviewPage(user, _medicineService, _acceptanceService);
+                var page = new RefusedMedicinesOverviewPage(user, _medicineController, _acceptanceController);
                 page.BackButtonPressed += () => HandleNavigationForPharmacist();
                 mainFrame.Content = page;
             };

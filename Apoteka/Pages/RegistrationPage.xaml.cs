@@ -1,4 +1,5 @@
-﻿using Apoteka.Exceptions;
+﻿using Apoteka.Controllers;
+using Apoteka.Exceptions;
 using Apoteka.Models;
 using Apoteka.Services;
 using System;
@@ -13,14 +14,14 @@ namespace Apoteka.Pages
     /// </summary>
     public partial class RegistrationPage : Page
     {
-        private readonly IUserService _userService;
+        private readonly IUserController _userController;
         public event Action BackButtonClicked;
 
-        public RegistrationPage(IUserService userService)
+        public RegistrationPage(IUserController userService)
         {
             InitializeComponent();
 
-            this._userService = userService;
+            this._userController = userService;
 
             cbUserRole.ItemsSource = new List<UserRole>
             {
@@ -49,7 +50,7 @@ namespace Apoteka.Pages
 
             try
             {
-                _userService.save(new User(txtJMBG.Text, txtEmail.Text, txtPassword.Text,
+                _userController.save(new User(txtJMBG.Text, txtEmail.Text, txtPassword.Text,
                                              txtName.Text, txtSurname.Text, txtMobilePhone.Text,
                                              (UserRole)cbUserRole.SelectedItem, false));
             }

@@ -1,7 +1,6 @@
 ﻿using Apoteka.Controllers;
 using Apoteka.Exceptions;
 using Apoteka.Models;
-using Apoteka.Services;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -14,10 +13,10 @@ namespace Apoteka.Pages
     /// </summary>
     public partial class RegistrationPage : Page
     {
-        private readonly IUserController _userController;
+        private readonly UserController _userController;
         public event Action BackButtonClicked;
 
-        public RegistrationPage(IUserController userService)
+        public RegistrationPage(UserController userService)
         {
             InitializeComponent();
 
@@ -50,7 +49,7 @@ namespace Apoteka.Pages
 
             try
             {
-                _userController.save(new User(txtJMBG.Text, txtEmail.Text, txtPassword.Text,
+                _userController.Save(new User(txtJMBG.Text, txtEmail.Text, txtPassword.Text,
                                              txtName.Text, txtSurname.Text, txtMobilePhone.Text,
                                              (UserRole)cbUserRole.SelectedItem, false));
             }

@@ -1,13 +1,9 @@
 ﻿using Apoteka.Constants;
 using Apoteka.Controllers;
 using Apoteka.Models;
-using Apoteka.Services;
-using Apoteka.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace Apoteka.Pages
 {
@@ -26,14 +22,14 @@ namespace Apoteka.Pages
             MedicineSeachingFilters.INGREDIENTS
         };
         private readonly List<Medicine> medicines;
-        private readonly IMedicineController _medicineService;
+        private readonly MedicineController _medicineController;
         public event Action BackButtonPressed;
 
-        public AcceptedMedicinesOverviewPage(IMedicineController medicineService)
+        public AcceptedMedicinesOverviewPage(MedicineController medicineController)
         {
             InitializeComponent();
-            this._medicineService = medicineService;
-            this.medicines = this._medicineService.GetAllAcceptedMedicines();
+            this._medicineController = medicineController;
+            this.medicines = this._medicineController.GetAllAcceptedMedicines();
 
             dgMedicines.ItemsSource = medicines;
 
@@ -76,52 +72,7 @@ namespace Apoteka.Pages
 
             if (selectedIndexInComboBox == -1) return;
 
-            switch (comboBoxOptions[selectedIndexInComboBox])
-            {
-                case MedicineSeachingFilters.ID:
-                    dgMedicines.ItemsSource = medicines.FindAll(medicine => medicine.Id.ToString().Contains(userInput));
-                    break;
-
-                case MedicineSeachingFilters.NAME:
-                    dgMedicines.ItemsSource = medicines.FindAll(medicine => medicine.Name.ToLower().Contains(userInput));
-                    break;
-
-                case MedicineSeachingFilters.MANUFACTURER:
-                    dgMedicines.ItemsSource = medicines.FindAll(medicine => medicine.Manufacturer.ToLower().Contains(userInput));
-                    break;
-
-                case MedicineSeachingFilters.PRICE_RANGE:
-                    var splittedString = userInput.Split(',');
-                    if (splittedString.Length != 2)
-                    {
-                        dgMedicines.ItemsSource = medicines;
-                        return;
-                    }
-
-                    int minVal;
-                    int maxVal;
-                    try
-                    {
-                        minVal = int.Parse(splittedString[0]);
-                        maxVal = int.Parse(splittedString[1]);
-                    }
-                    catch
-                    {
-                        dgMedicines.ItemsSource = medicines;
-                        return;
-                    }
-
-                    dgMedicines.ItemsSource = medicines.FindAll(medicine => minVal <= medicine.Price && medicine.Price <= maxVal);
-                    break;
-
-                case MedicineSeachingFilters.QUANTITY:
-                    dgMedicines.ItemsSource = medicines.FindAll(medicine => medicine.Quantity.ToString().Equals(userInput));
-                    break;
-
-                case MedicineSeachingFilters.INGREDIENTS:
-                    dgMedicines.ItemsSource = SearchingHelper.GetMedicinesUsingIngredientsFilter(medicines, userInput);
-                    break;
-            }
+            dgMedicines.ItemsSource = _medicineController.SearchAcceptedMedicines(comboBoxOptions[selectedIndexInComboBox], userInput);
         }
 
         private void btnBack_Click(object sender, System.Windows.RoutedEventArgs e)

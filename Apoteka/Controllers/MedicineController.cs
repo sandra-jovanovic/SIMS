@@ -1,11 +1,12 @@
 ﻿using Apoteka.Models;
 using Apoteka.Repositories;
 using Apoteka.Services;
+using System;
 using System.Collections.Generic;
 
 namespace Apoteka.Controllers
 {
-    public class MedicineController : IMedicineController
+    public class MedicineController
     {
         private IMedicineService medicineService;
 
@@ -24,9 +25,9 @@ namespace Apoteka.Controllers
             return medicineService.GetAllAcceptedMedicines();
         }
 
-        public List<Medicine> GetNotAcceptedMedicines()
+        public List<Medicine> GetNotAcceptedMedicines(User user)
         {
-            return medicineService.GetNotAcceptedMedicines();
+            return medicineService.GetNotAcceptedMedicines(user);
         }
 
         public List<Medicine> GetRefusedMedicines()
@@ -34,24 +35,39 @@ namespace Apoteka.Controllers
             return medicineService.GetRefusedMedicines();
         }
 
+        public List<Medicine> SearchRefusedMedicines(string searchBy, string searchText)
+        {
+            return medicineService.SearchRefusedMedicines(searchBy, searchText);
+        }
+
+        public List<Medicine> SearchAcceptedMedicines(string searchBy, string searchText)
+        {
+            return medicineService.SearchAcceptedMedicines(searchBy, searchText);
+        }
+
         public void IncreaseMedicineQuantity(int medicineId, int quantity)
         {
             medicineService.IncreaseMedicineQuantity(medicineId, quantity);
         }
 
-        public void MarkMedicineAsApproved(int medicineId)
+        public bool AcceptMedicine(Medicine medicine, User user)
         {
-            medicineService.MarkMedicineAsApproved(medicineId);
+            return medicineService.AcceptMedicine(medicine, user);
         }
 
-        public void SetMedicineRefused(int medicineId, string reason, string refusedBy)
+        public void RevokeMedicineAcceptanceByUser(User user, Medicine medicine)
         {
-            medicineService.SetMedicineRefused(medicineId, reason, refusedBy);
+            medicineService.RevokeMedicineAcceptanceByUser(user, medicine);
         }
 
-        public void UnmarkMedicineAsRefused(int medicineId)
+        public void RefuseMedicine(int medicineId, string reason, string refusedBy)
         {
-            medicineService.UnmarkMedicineAsRefused(medicineId);
+            medicineService.RefuseMedicine(medicineId, reason, refusedBy);
+        }
+
+        public void UnmarkMedicineAsRefused(int medicineId, User user)
+        {
+            medicineService.UnmarkMedicineAsRefused(medicineId, user);
         }
     }
 }

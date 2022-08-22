@@ -11,11 +11,10 @@ namespace Apoteka.Util
     {
         private Frame mainFrame;
         private readonly User user;
-        private readonly IUserController _userController;
-        private readonly IMedicineController _medicineController;
-        private readonly IAcceptanceController _acceptanceController;
-        private readonly IIngredientsController _ingredientController;
-        private readonly ISchedulingController _schedulingController;
+        private readonly UserController _userController;
+        private readonly MedicineController _medicineController;
+        private readonly IngredientsController _ingredientController;
+        private readonly SchedulingController _schedulingController;
 
         public NavigationManager(Frame mainFrame, User user, CompositeController compositeController)
         {
@@ -23,7 +22,6 @@ namespace Apoteka.Util
             this.user = user;
             _userController = compositeController.UserController;
             _medicineController = compositeController.MedicineController;
-            _acceptanceController = compositeController.AcceptanceController;
             _schedulingController = compositeController.SchedulingController;
             _ingredientController = compositeController.IngredientsController;
 
@@ -98,7 +96,7 @@ namespace Apoteka.Util
 
             doctorMenu.AcceptOrRefuseMedicinesButtonClicked += () =>
             {
-                var page = new MedicinesWaitingForAcceptancePage(user, _medicineController, _acceptanceController);
+                var page = new MedicinesWaitingForAcceptancePage(user, _medicineController);
                 page.backButtonClicked += () => HandleNavigationForDoctor();
                 mainFrame.Content = page;
             };
@@ -119,14 +117,14 @@ namespace Apoteka.Util
 
             pharmacisMenu.AcceptOrRefuseMedicinesButtonClicked += () =>
             {
-                var page = new MedicinesWaitingForAcceptancePage(user, _medicineController, _acceptanceController);
+                var page = new MedicinesWaitingForAcceptancePage(user, _medicineController);
                 page.backButtonClicked += () => HandleNavigationForPharmacist();
                 mainFrame.Content = page;
             };
 
             pharmacisMenu.RefusedMedicinesButtonClicked += () =>
             {
-                var page = new RefusedMedicinesOverviewPage(user, _medicineController, _acceptanceController);
+                var page = new RefusedMedicinesOverviewPage(user, _medicineController);
                 page.BackButtonPressed += () => HandleNavigationForPharmacist();
                 mainFrame.Content = page;
             };

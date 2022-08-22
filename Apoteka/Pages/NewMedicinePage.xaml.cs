@@ -1,7 +1,6 @@
 ﻿using Apoteka.Controllers;
 using Apoteka.Exceptions;
 using Apoteka.Models;
-using Apoteka.Services;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -14,11 +13,11 @@ namespace Apoteka.Pages
     /// </summary>
     public partial class NewMedicinePage : Page
     {
-        private readonly IMedicineController _medicineController;
-        private readonly IIngredientsController _ingredientsController;
+        private readonly MedicineController _medicineController;
+        private readonly IngredientsController _ingredientsController;
 
         public event Action BackButtonClicked;
-        public NewMedicinePage(IIngredientsController ingredientsService, IMedicineController medicineService)
+        public NewMedicinePage(IngredientsController ingredientsService, MedicineController medicineService)
         {
             InitializeComponent();
             this._medicineController = medicineService;

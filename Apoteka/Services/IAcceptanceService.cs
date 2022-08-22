@@ -7,6 +7,7 @@ namespace Apoteka.Services
     {
         List<Acceptance> GetAllAcceptances();
         List<Acceptance> GetAcceptancesByUser(string JMBG);
+        Acceptance? GetAcceptanceByUserIdAndMedicineId(string JMBG, int medicineId);
         bool AcceptMedicineByUser(string JMBG, int medicineId, bool isDoctor);
         void RevokeMedicineAcceptanceByUser(string jMBG, int id);
         void DeleteAllAcceptancesForMedicine(int medicineId);

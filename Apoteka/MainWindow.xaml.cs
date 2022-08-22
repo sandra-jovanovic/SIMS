@@ -44,18 +44,17 @@ namespace Apoteka
             IIngredientRepository ingredientRepository = new IngredientRepository();
 
             IUserService userService = new UserService(userRepository);
-            IMedicineService medicineService = new MedicineService(medicineRepository);
-            ISchedulingService schedulingService = new SchedulingService(schedulingRepository, medicineRepository);
             IAcceptanceService acceptanceService = new AcceptanceService(acceptanceRepository);
+            IMedicineService medicineService = new MedicineService(medicineRepository, acceptanceService);
+            ISchedulingService schedulingService = new SchedulingService(schedulingRepository, medicineRepository);
             IIngredientsService ingredientsService = new IngredientsService(ingredientRepository);
 
-            IUserController userController = new UserController(userService);
-            IMedicineController medicineController = new MedicineController(medicineService);
-            ISchedulingController schedulingController = new SchedulingController(schedulingService);
-            IAcceptanceController acceptanceController = new AcceptanceController(acceptanceService);
-            IIngredientsController ingredientsController = new IngredientsController(ingredientsService);
+            UserController userController = new UserController(userService);
+            MedicineController medicineController = new MedicineController(medicineService);
+            SchedulingController schedulingController = new SchedulingController(schedulingService);
+            IngredientsController ingredientsController = new IngredientsController(ingredientsService);
 
-            return new CompositeController(userController, medicineController, acceptanceController, ingredientsController, schedulingController);
+            return new CompositeController(userController, medicineController, ingredientsController, schedulingController);
 
         }
     }

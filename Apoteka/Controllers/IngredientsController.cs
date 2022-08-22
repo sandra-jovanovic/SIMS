@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Apoteka.Controllers
 {
-    public class IngredientsController : IIngredientsController
+    public class IngredientsController
     {
         private IIngredientsService ingredientService;
 

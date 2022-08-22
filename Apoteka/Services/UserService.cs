@@ -1,10 +1,7 @@
 ﻿using Apoteka.Models;
 using Apoteka.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Apoteka.Services
 {
@@ -15,6 +12,14 @@ namespace Apoteka.Services
         public UserService(IUserRepository userRepository)
         {
             this.userRepository = userRepository;
+        }
+
+        public User AuthenticateUser(string email, string password)
+        {
+            var users = userRepository.GetAllNonBlockedUsers();
+            var user = users.FirstOrDefault(user => user.Email == email && user.Password == password);
+
+            return user;
         }
 
         public void BlockUser(User user)
@@ -32,9 +37,9 @@ namespace Apoteka.Services
             return userRepository.GetAllUsers();
         }
 
-        public void save(User user)
+        public void Save(User user)
         {
-            userRepository.save(user);
+            userRepository.Save(user);
         }
 
         public void UnblockUser(User user)

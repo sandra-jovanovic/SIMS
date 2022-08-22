@@ -1,10 +1,6 @@
 ﻿using Apoteka.Models;
 using Apoteka.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Apoteka.Services
 {
@@ -16,6 +12,12 @@ namespace Apoteka.Services
         {
             this.acceptanceRepository = acceptanceRepository;
         }
+
+        public Acceptance? GetAcceptanceByUserIdAndMedicineId(string JMBG, int medicineId)
+        {
+            return acceptanceRepository.GetAcceptancesByUser(JMBG).Find(a => a.MedicineId == medicineId);
+        }
+
 
         public bool AcceptMedicineByUser(string JMBG, int medicineId, bool isDoctor)
         {

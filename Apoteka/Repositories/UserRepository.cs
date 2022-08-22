@@ -50,7 +50,7 @@ namespace Apoteka.Repositories
             return users;
         }
 
-        public void save(User user)
+        public void Save(User user)
         {
             var users = GetAllUsers();
 

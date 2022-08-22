@@ -15,7 +15,7 @@ namespace Apoteka.Pages
     {
         public event Action<User> SuccessfullyLoggedIn;
         private int numberOfLoginsLeft = 3;
-        private readonly IUserController _userController;
+        private readonly UserController _userController;
 
         public LoginPage(CompositeController compositeController)
         {
@@ -28,7 +28,7 @@ namespace Apoteka.Pages
             var email = tfEmail.Text;
             var password = tfPassword.Password;
 
-            var user = authenticateUser(email, password);
+            var user = AuthenticateUser(email, password);
 
             if (user == null)
             {
@@ -48,12 +48,9 @@ namespace Apoteka.Pages
 
         }
 
-        private User authenticateUser(string email, string password)
+        private User AuthenticateUser(string email, string password)
         {
-            var users = _userController.GetAllNonBlockedUsers();
-            var user = users.FirstOrDefault(user => user.Email == email && user.Password == password);
-
-            return user;
+            return _userController.AuthenticateUser(email, password);
         }
     }
 }

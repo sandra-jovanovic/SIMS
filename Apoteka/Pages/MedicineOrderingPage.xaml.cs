@@ -1,6 +1,5 @@
 ﻿using Apoteka.Controllers;
 using Apoteka.Models;
-using Apoteka.Services;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,15 +11,16 @@ namespace Apoteka.Pages
     /// </summary>
     public partial class MedicineOrderingPage : Page
     {
-        private readonly IMedicineController _medicineController;
-        private readonly ISchedulingController _schedulingController;
+        private readonly MedicineController _medicineController;
+        private readonly SchedulingController schedulingController;
 
         public event Action BackButtonClicked;
-        public MedicineOrderingPage(IMedicineController medicineService, ISchedulingController schedulingService)
+        public MedicineOrderingPage(MedicineController medicineController, SchedulingController schedulingController)
         {
             InitializeComponent();
-            this._medicineController = medicineService;
-            this._schedulingController = schedulingService;
+            this._medicineController = medicineController;
+            this.schedulingController = schedulingController;
+
             cbMedicines.ItemsSource = _medicineController.GetAllAcceptedMedicines();
         }
 
@@ -89,7 +89,7 @@ namespace Apoteka.Pages
 
         private void ScheduleOrdering(Medicine medicine, int quantity, DateTime scheduledDate)
         {
-            _schedulingController.ScheduleOrderingForDate(new ScheduledMedicineOrdering(scheduledDate, medicine.Id, quantity));
+            schedulingController.ScheduleOrderingForDate(new ScheduledMedicineOrdering(scheduledDate, medicine.Id, quantity));
             MessageBox.Show($"Nabavka je sačuvana za datum {scheduledDate}");
         }
     }

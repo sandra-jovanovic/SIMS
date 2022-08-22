@@ -1,6 +1,5 @@
 ﻿using Apoteka.Controllers;
 using Apoteka.Models;
-using Apoteka.Services;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -13,16 +12,17 @@ namespace Apoteka.Pages
     /// </summary>
     public partial class UsersOverviewPage : Page
     {
-        private readonly IUserController _userController;
-        private List<User> users;
+        private readonly UserController _userController;
 
+        private List<User> users;
         public event Action BackButtonClicked;
-        public UsersOverviewPage(IUserController userService)
+
+        public UsersOverviewPage(UserController userController)
         {
             InitializeComponent();
-            this._userController = userService;
-            users = _userController.GetAllUsers();
 
+            this._userController = userController;
+            users = _userController.GetAllUsers();
             dgUsers.ItemsSource = users;
 
             cbUserRole.ItemsSource = Enum.GetValues(typeof(UserRole));
@@ -51,10 +51,7 @@ namespace Apoteka.Pages
 
             _userController.BlockUser(user);
 
-            users.ForEach(iterUser =>
-            {
-                if (iterUser.JMBG == user.JMBG) user.Blocked = true;
-            });
+            users = _userController.GetAllUsers();
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
@@ -68,10 +65,7 @@ namespace Apoteka.Pages
 
             _userController.UnblockUser(user);
 
-            users.ForEach(iterUser =>
-            {
-                if (iterUser.JMBG == user.JMBG) user.Blocked = false;
-            });
+            users = _userController.GetAllUsers();
         }
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Apoteka.Controllers
 {
-    public class SchedulingController : ISchedulingController
+    public class SchedulingController
     {
         private readonly ISchedulingService schedulingService;
 

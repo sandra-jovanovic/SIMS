@@ -36,7 +36,7 @@ namespace Apoteka.Repositories
             
         }
 
-        public void SaveMedicines(List<Medicine> medicines)
+        private void SaveMedicines(List<Medicine> medicines)
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(FILE_PATH, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -44,7 +44,7 @@ namespace Apoteka.Repositories
             stream.Close();
         }
 
-        public void AddMedicine(Medicine medicine)
+        public void AddNewMedicine(Medicine medicine)
         {
             var allMedicines = GetAllMedicines();
 
@@ -60,82 +60,45 @@ namespace Apoteka.Repositories
             SaveMedicines(medicines);
         }
 
-        public List<Medicine> GetAllAcceptedMedicines()
+        public void UpdateMedicine(Medicine medicine)
         {
-            return GetAllMedicines().FindAll(medicine => medicine.Accepted && !medicine.Refused);
-        }
+            var allMedicines = GetAllMedicines();
 
-        public List<Medicine> GetNotAcceptedMedicines()
-        {
-            return GetAllMedicines().FindAll(medicine => !medicine.Accepted && !medicine.Refused);
-        }
-
-        public void IncreaseMedicineQuantity(int medicineId, int quantity)
-        {
-            List<Medicine> allMedicines = GetAllMedicines();
-            allMedicines.ForEach(iter => 
+            foreach (var iterMedicine in allMedicines)
             {
-                if (iter.Id == medicineId)
+                if (medicine.Id == iterMedicine.Id)
                 {
-                    iter.Quantity += quantity;
+                    iterMedicine.Price = medicine.Price;
+                    iterMedicine.Accepted = medicine.Accepted;
+                    iterMedicine.Quantity = medicine.Quantity;
+                    iterMedicine.RefusedBy = medicine.RefusedBy;
+                    iterMedicine.Refused = medicine.Refused;
+                    iterMedicine.Manufacturer = medicine.Manufacturer;
+                    iterMedicine.ReasonForRefusing = medicine.ReasonForRefusing;
+                    iterMedicine.Ingredients = medicine.Ingredients;
+                    break;
                 }
-            });
+            }
 
             SaveMedicines(allMedicines);
         }
 
-        public List<Medicine> GetRefusedMedicines()
-        {
-            return GetAllMedicines().FindAll(medicine => medicine.Refused);
-        }
 
-        public void SetMedicineRefused(int medicineId, string reason, string refusedBy)
-        {
-            List<Medicine> allMedicines = GetAllMedicines();
-            allMedicines.ForEach(iter =>
-            {
-                if (iter.Id == medicineId)
-                {
-                    iter.Refused = true;
-                    iter.ReasonForRefusing = reason;
-                    iter.RefusedBy = refusedBy;
-                }
-            });
+        //public void UnmarkMedicineAsRefused(int medicineId)
+        //{
+        //    List<Medicine> allMedicines = GetAllMedicines();
+        //    allMedicines.ForEach(iter =>
+        //    {
+        //        if (iter.Id == medicineId)
+        //        {
+        //            iter.Refused = false;
+        //            iter.RefusedBy = "";
+        //            iter.ReasonForRefusing = "";
+        //        }
+        //    });
 
-            SaveMedicines(allMedicines);
-        }
+        //    SaveMedicines(allMedicines);
+        //}
 
-        public void UnmarkMedicineAsRefused(int medicineId)
-        {
-            List<Medicine> allMedicines = GetAllMedicines();
-            allMedicines.ForEach(iter =>
-            {
-                if (iter.Id == medicineId)
-                {
-                    iter.Refused = false;
-                    iter.RefusedBy = "";
-                    iter.ReasonForRefusing = "";
-                }
-            });
-
-            SaveMedicines(allMedicines);
-        }
-
-        public void MarkMedicineAsApproved(int medicineId)
-        {
-            List<Medicine> allMedicines = GetAllMedicines();
-            allMedicines.ForEach(iter =>
-            {
-                if (iter.Id == medicineId)
-                {
-                    iter.Refused = false;
-                    iter.ReasonForRefusing = "";
-                    iter.RefusedBy = "";
-                    iter.Accepted = true;
-                }
-            });
-
-            SaveMedicines(allMedicines);
-        }
     }
 }

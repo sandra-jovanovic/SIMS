@@ -32,25 +32,7 @@ namespace Apoteka.Repositories
             return users;
         }
 
-        public List<User> GetAllNonBlockedUsers()
-        {
-            var users = new List<User>();
-
-            using (StreamReader sr = new StreamReader(filePath))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    var user = parseUserLine(line);
-                    if (!user.Blocked) users.Add(user);
-                }
-
-            }
-
-            return users;
-        }
-
-        public void Save(User user)
+        public void AddNewUser(User user)
         {
             var users = GetAllUsers();
 
@@ -63,9 +45,43 @@ namespace Apoteka.Repositories
                     throw new ExistingEmailException();
             }
 
+            users.Add(user);
+
+            SaveUsers(users);
+        }
+
+        public void UpdateUser(User user)
+        {
+            var users = GetAllUsers();
+            foreach (User u in users)
+            {
+                if (u.JMBG.Equals(user.JMBG))
+                {
+                    u.Name = user.Name;
+                    u.Surname = user.Surname;
+                    u.Role = user.Role;
+                    u.Phone = user.Phone;
+                    u.Blocked = user.Blocked;
+                }
+            }
+
+            SaveUsers(users);
+        }
+
+        private void SaveUsers(List<User> users)
+        {
+
+            using (StreamWriter sw = new StreamWriter(filePath, false))
+            {
+                sw.Write("");
+            }
+
             using (StreamWriter sw = new StreamWriter(filePath, true))
             {
-                sw.WriteLine(user.ToString());
+                users.ForEach(modifiedUser =>
+                {
+                    sw.WriteLine(modifiedUser);
+                });
             }
 
         }
@@ -85,54 +101,5 @@ namespace Apoteka.Repositories
             return new User(JMBG, email, password, name, surname, phone, (UserRole)Enum.Parse(typeof(UserRole), role), bool.Parse(blocked));
         }
 
-        public void BlockUser(User user)
-        {
-            var users = GetAllUsers();
-            var modifiedUsers = new List<User>();
-
-            users.ForEach(fileUser =>
-            {
-                if (fileUser.JMBG == user.JMBG) fileUser.Blocked = true;
-                modifiedUsers.Add(fileUser);
-            });
-
-            using (StreamWriter sw = new StreamWriter(filePath, false))
-            {
-                sw.Write("");
-            }
-
-            using (StreamWriter sw = new StreamWriter(filePath, true))
-            {
-                modifiedUsers.ForEach(modifiedUser =>
-                {
-                    sw.WriteLine(modifiedUser);
-                });
-            }
-        }
-
-        public void UnblockUser(User user)
-        {
-            var users = GetAllUsers();
-            var modifiedUsers = new List<User>();
-
-            users.ForEach(fileUser =>
-            {
-                if (fileUser.JMBG == user.JMBG) fileUser.Blocked = false;
-                modifiedUsers.Add(fileUser);
-            });
-
-            using (StreamWriter sw = new StreamWriter(filePath, false))
-            {
-                sw.Write("");
-            }
-
-            using (StreamWriter sw = new StreamWriter(filePath, true))
-            {
-                modifiedUsers.ForEach(modifiedUser =>
-                {
-                    sw.WriteLine(modifiedUser);
-                });
-            }
-        }
     }
 }

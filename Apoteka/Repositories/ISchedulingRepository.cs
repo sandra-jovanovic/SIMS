@@ -5,8 +5,8 @@ namespace Apoteka.Repositories
 {
     public interface ISchedulingRepository
     {
-        void ScheduleOrderingForDate(ScheduledMedicineOrdering scheduledMedicineOrdering);
         List<ScheduledMedicineOrdering> GetAllSchedules();
-        void RemoveAllSchedulesForTodayOrPreviousPeriod();
+        void AddNewScheduledOrder(ScheduledMedicineOrdering scheduledMedicineOrdering);
+        void RemoveScheduledOrder(ScheduledMedicineOrdering scheduledMedicineOrdering);
     }
 }

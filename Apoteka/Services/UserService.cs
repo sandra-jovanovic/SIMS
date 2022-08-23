@@ -16,7 +16,7 @@ namespace Apoteka.Services
 
         public User AuthenticateUser(string email, string password)
         {
-            var users = userRepository.GetAllNonBlockedUsers();
+            var users = userRepository.GetAllUsers().FindAll(user => !user.Blocked);
             var user = users.FirstOrDefault(user => user.Email == email && user.Password == password);
 
             return user;
@@ -24,12 +24,13 @@ namespace Apoteka.Services
 
         public void BlockUser(User user)
         {
-            userRepository.BlockUser(user);
+            user.Blocked = true;
+            userRepository.UpdateUser(user);
         }
 
         public List<User> GetAllNonBlockedUsers()
         {
-            return userRepository.GetAllNonBlockedUsers();
+            return userRepository.GetAllUsers().FindAll(user => !user.Blocked);
         }
 
         public List<User> GetAllUsers()
@@ -39,12 +40,13 @@ namespace Apoteka.Services
 
         public void Save(User user)
         {
-            userRepository.Save(user);
+            userRepository.AddNewUser(user);
         }
 
         public void UnblockUser(User user)
         {
-            userRepository.UnblockUser(user);
+            user.Blocked = false;
+            userRepository.UpdateUser(user);
         }
     }
 }

@@ -19,17 +19,17 @@ namespace Apoteka.Services
 
         public void AddMedicine(Medicine medicine)
         {
-            medicineRepository.AddMedicine(medicine);
+            medicineRepository.AddNewMedicine(medicine);
         }
 
         public List<Medicine> GetAllAcceptedMedicines()
         {
-            return medicineRepository.GetAllAcceptedMedicines();
+            return medicineRepository.GetAllMedicines().FindAll(medicine => medicine.Accepted && !medicine.Refused);
         }
 
         public List<Medicine> GetNotAcceptedMedicines(User user)
         {
-            List<Medicine> medicines = medicineRepository.GetNotAcceptedMedicines();
+            List<Medicine> medicines = medicineRepository.GetAllMedicines().FindAll(medicine => !medicine.Accepted && !medicine.Refused);
             medicines.ForEach(medicine =>
             {
                 var acceptance = acceptanceService.GetAcceptanceByUserIdAndMedicineId(user.JMBG, medicine.Id);
@@ -41,7 +41,7 @@ namespace Apoteka.Services
 
         public List<Medicine> GetRefusedMedicines()
         {
-            return medicineRepository.GetRefusedMedicines();
+            return medicineRepository.GetAllMedicines().FindAll(medicine => medicine.Refused);
         }
 
         public List<Medicine> SearchRefusedMedicines(string searchBy, string searchText)
@@ -49,16 +49,16 @@ namespace Apoteka.Services
             switch (searchBy)
             {
                 case MedicineSeachingFilters.ID:
-                    return medicineRepository.GetRefusedMedicines().FindAll(medicine => medicine.Id.ToString().Contains(searchText));
+                    return GetRefusedMedicines().FindAll(medicine => medicine.Id.ToString().Contains(searchText));
                 case MedicineSeachingFilters.NAME:
-                    return medicineRepository.GetRefusedMedicines().FindAll(medicine => medicine.Name.ToLower().Contains(searchText));
+                    return GetRefusedMedicines().FindAll(medicine => medicine.Name.ToLower().Contains(searchText));
                 case MedicineSeachingFilters.MANUFACTURER:
-                    return medicineRepository.GetRefusedMedicines().FindAll(medicine => medicine.Manufacturer.ToLower().Contains(searchText));
+                    return GetRefusedMedicines().FindAll(medicine => medicine.Manufacturer.ToLower().Contains(searchText));
                 case MedicineSeachingFilters.PRICE_RANGE:
                     var splittedString = searchText.Split(',');
                     if (splittedString.Length != 2)
                     {
-                        return medicineRepository.GetRefusedMedicines();
+                        return GetRefusedMedicines();
                     }
 
                     int minVal;
@@ -70,16 +70,16 @@ namespace Apoteka.Services
                     }
                     catch
                     {
-                        return medicineRepository.GetRefusedMedicines();
+                        return GetRefusedMedicines();
                     }
 
-                    return medicineRepository.GetRefusedMedicines().FindAll(medicine => minVal <= medicine.Price && medicine.Price <= maxVal);
+                    return GetRefusedMedicines().FindAll(medicine => minVal <= medicine.Price && medicine.Price <= maxVal);
                 case MedicineSeachingFilters.QUANTITY:
-                    return medicineRepository.GetRefusedMedicines().FindAll(medicine => medicine.Quantity.ToString().Equals(searchText));
+                    return GetRefusedMedicines().FindAll(medicine => medicine.Quantity.ToString().Equals(searchText));
                 case MedicineSeachingFilters.INGREDIENTS:
-                    return (List<Medicine>)SearchingHelper.GetMedicinesUsingIngredientsFilter(medicineRepository.GetRefusedMedicines(), searchText);
+                    return (List<Medicine>)SearchingHelper.GetMedicinesUsingIngredientsFilter(GetRefusedMedicines(), searchText);
                 default:
-                    return medicineRepository.GetRefusedMedicines();
+                    return GetRefusedMedicines();
             }
         }
 
@@ -88,16 +88,16 @@ namespace Apoteka.Services
             switch (searchBy)
             {
                 case MedicineSeachingFilters.ID:
-                    return medicineRepository.GetAllAcceptedMedicines().FindAll(medicine => medicine.Id.ToString().Contains(searchText));
+                    return GetAllAcceptedMedicines().FindAll(medicine => medicine.Id.ToString().Contains(searchText));
                 case MedicineSeachingFilters.NAME:
-                    return medicineRepository.GetAllAcceptedMedicines().FindAll(medicine => medicine.Name.ToLower().Contains(searchText));
+                    return GetAllAcceptedMedicines().FindAll(medicine => medicine.Name.ToLower().Contains(searchText));
                 case MedicineSeachingFilters.MANUFACTURER:
-                    return medicineRepository.GetAllAcceptedMedicines().FindAll(medicine => medicine.Manufacturer.ToLower().Contains(searchText));
+                    return GetAllAcceptedMedicines().FindAll(medicine => medicine.Manufacturer.ToLower().Contains(searchText));
                 case MedicineSeachingFilters.PRICE_RANGE:
                     var splittedString = searchText.Split(',');
                     if (splittedString.Length != 2)
                     {
-                        return medicineRepository.GetAllAcceptedMedicines();
+                        return GetAllAcceptedMedicines();
                     }
 
                     int minVal;
@@ -109,22 +109,24 @@ namespace Apoteka.Services
                     }
                     catch
                     {
-                        return medicineRepository.GetAllAcceptedMedicines();
+                        return GetAllAcceptedMedicines();
                     }
 
-                    return medicineRepository.GetAllAcceptedMedicines().FindAll(medicine => minVal <= medicine.Price && medicine.Price <= maxVal);
+                    return GetAllAcceptedMedicines().FindAll(medicine => minVal <= medicine.Price && medicine.Price <= maxVal);
                 case MedicineSeachingFilters.QUANTITY:
-                    return medicineRepository.GetAllAcceptedMedicines().FindAll(medicine => medicine.Quantity.ToString().Equals(searchText));
+                    return GetAllAcceptedMedicines().FindAll(medicine => medicine.Quantity.ToString().Equals(searchText));
                 case MedicineSeachingFilters.INGREDIENTS:
-                    return (List<Medicine>)SearchingHelper.GetMedicinesUsingIngredientsFilter(medicineRepository.GetAllAcceptedMedicines(), searchText);
+                    return (List<Medicine>)SearchingHelper.GetMedicinesUsingIngredientsFilter(GetAllAcceptedMedicines(), searchText);
                 default:
-                    return medicineRepository.GetAllAcceptedMedicines();
+                    return GetAllAcceptedMedicines();
             }
         }
 
         public void IncreaseMedicineQuantity(int medicineId, int quantity)
         {
-            medicineRepository.IncreaseMedicineQuantity(medicineId, quantity);
+            Medicine medicine = medicineRepository.GetAllMedicines().Find(m => m.Id == medicineId);
+            medicine.Quantity = quantity;
+            medicineRepository.UpdateMedicine(medicine);
         }
 
         public bool AcceptMedicine(Medicine medicine, User user)
@@ -132,7 +134,13 @@ namespace Apoteka.Services
             var medicineApproved = acceptanceService.AcceptMedicineByUser(user.JMBG, medicine.Id, user.Role == UserRole.Lekar);
             if (medicineApproved)
             {
-                medicineRepository.MarkMedicineAsApproved(medicine.Id);
+                var medicineToUpdate = medicineRepository.GetAllMedicines().Find(m => m.Id == medicine.Id);
+                medicineToUpdate.Refused = false;
+                medicineToUpdate.RefusedBy = string.Empty;
+                medicineToUpdate.ReasonForRefusing = string.Empty;
+                medicineToUpdate.Accepted = true;
+
+                medicineRepository.UpdateMedicine(medicineToUpdate);
             }
 
             return medicineApproved;
@@ -140,13 +148,24 @@ namespace Apoteka.Services
 
         public void RefuseMedicine(int medicineId, string reason, string refusedBy)
         {
-            medicineRepository.SetMedicineRefused(medicineId, reason, refusedBy);
+            var medicineToUpdate = medicineRepository.GetAllMedicines().Find(m => m.Id == medicineId);
+            medicineToUpdate.Refused = true;
+            medicineToUpdate.RefusedBy = refusedBy;
+            medicineToUpdate.ReasonForRefusing = reason;
+            medicineToUpdate.Accepted = false;
+
+            medicineRepository.UpdateMedicine(medicineToUpdate);
+
             acceptanceService.DeleteAllAcceptancesForMedicine(medicineId);
         }
 
         public void UnmarkMedicineAsRefused(int medicineId, User user)
         {
-            medicineRepository.UnmarkMedicineAsRefused(medicineId);
+            var medicineToUpdate = medicineRepository.GetAllMedicines().Find(m => m.Id == medicineId);
+            medicineToUpdate.Refused = false;
+            medicineToUpdate.RefusedBy = string.Empty;
+            medicineToUpdate.ReasonForRefusing = string.Empty;
+
             acceptanceService.AcceptMedicineByUser(user.JMBG, medicineId, user.Role == UserRole.Lekar);
         }
 

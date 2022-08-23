@@ -6,9 +6,7 @@ namespace Apoteka.Repositories
     public interface IUserRepository
     {
         List<User> GetAllUsers();
-        List<User> GetAllNonBlockedUsers();
-        void Save(User user);
-        void BlockUser(User user);
-        void UnblockUser(User user);
+        void AddNewUser(User user);
+        void UpdateUser(User user);
     }
 }

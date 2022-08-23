@@ -34,7 +34,7 @@ namespace Apoteka.Repositories
             return scheduledOrderings;
         }
 
-        public void ScheduleOrderingForDate(ScheduledMedicineOrdering scheduledMedicineOrdering)
+        public void AddNewScheduledOrder(ScheduledMedicineOrdering scheduledMedicineOrdering)
         {
             var allSchedules = GetAllSchedules();
             allSchedules.Add(scheduledMedicineOrdering);
@@ -67,10 +67,12 @@ namespace Apoteka.Repositories
             return new ScheduledMedicineOrdering(date, medicineId, quantity);
         }
 
-        public void RemoveAllSchedulesForTodayOrPreviousPeriod()
+        public void RemoveScheduledOrder(ScheduledMedicineOrdering scheduledMedicineOrdering)
         {
-            var schedules = GetAllSchedules().FindAll(schedule => schedule.Date > DateTime.Now);
-            SaveScheduledOrderings(schedules);
+            var allSchedulerOrders = GetAllSchedules();
+            allSchedulerOrders = allSchedulerOrders.FindAll(s => s.MedicineId != scheduledMedicineOrdering.MedicineId && s.Date.Equals(DateTime.Today));
+            SaveScheduledOrderings(allSchedulerOrders);
         }
+
     }
 }

@@ -10,9 +10,7 @@ namespace Apoteka.Repositories
     public interface IAcceptanceRepository
     {
         List<Acceptance> GetAllAcceptances();
-        List<Acceptance> GetAcceptancesByUser(string JMBG);
-        bool AcceptMedicineByUser(string JMBG, int medicineId, bool isDoctor);
-        void RevokeMedicineAcceptanceByUser(string jMBG, int id);
-        void DeleteAllAcceptancesForMedicine(int medicineId);
+        void CreateAcceptance(Acceptance acceptance);
+        void DeleteAcceptance(Acceptance acceptance);
     }
 }

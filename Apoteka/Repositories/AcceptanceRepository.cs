@@ -8,6 +8,7 @@ namespace Apoteka.Repositories
     public class AcceptanceRepository : IAcceptanceRepository
     {
         private const string filePath = "./acceptances.txt";
+
         public List<Acceptance> GetAllAcceptances()
         {
             if (!File.Exists(filePath))
@@ -31,6 +32,20 @@ namespace Apoteka.Repositories
             return acceptances;
         }
 
+        public void CreateAcceptance(Acceptance acceptance)
+        {
+            var acceptances = GetAllAcceptances();
+            acceptances.Add(acceptance);
+            SaveAcceptances(acceptances);
+        }
+
+        public void DeleteAcceptance(Acceptance acceptance)
+        {
+            var acceptances = GetAllAcceptances();
+            acceptances = acceptances.FindAll(a => !a.JMBG.Equals(acceptance.JMBG) && a.MedicineId != acceptance.MedicineId);
+            SaveAcceptances(acceptances);
+        }
+
         private Acceptance parseAcceptanceLine(string line)
         {
             var fields = line.Split(",");
@@ -41,63 +56,8 @@ namespace Apoteka.Repositories
             return new Acceptance(JMBG, medicineId, byDoctor);
         }
 
-        public List<Acceptance> GetAcceptancesByUser(string JMBG)
+        private void SaveAcceptances(List<Acceptance> acceptances) 
         {
-            return GetAllAcceptances().FindAll(acceptance => acceptance.JMBG == JMBG);
-        }
-
-        public bool AcceptMedicineByUser(string JMBG, int medicineId, bool isDoctor)
-        {
-            var allAcceptances = GetAllAcceptances().FindAll(acc => acc.MedicineId == medicineId);
-            
-            int numberOfPharmacists = allAcceptances.Count(acc => !acc.ByDoctor);
-            int numberOfDoctors = allAcceptances.Count(acc => acc.ByDoctor);
-
-            if (isDoctor)
-            {
-                numberOfDoctors++;
-            }
-            else
-            {
-                numberOfPharmacists++;
-            }
-
-            var shoudBeAccepted = numberOfDoctors >= 1 && numberOfPharmacists >= 2;
-
-            if (shoudBeAccepted)
-            {
-                var filteredAcceptances = GetAllAcceptances().FindAll(acc => acc.MedicineId != medicineId);
-
-                using (StreamWriter sw = new StreamWriter(filePath, false))
-                {
-                    sw.Write("");
-                }
-
-                using (StreamWriter sw = new StreamWriter(filePath, true))
-                {
-                    foreach (var filteredAcceptance in filteredAcceptances)
-                    {
-                        var newLine = $"{filteredAcceptance.JMBG},{filteredAcceptance.MedicineId},{filteredAcceptance.ByDoctor}";
-                        sw.WriteLine(newLine);
-                    }
-                }
-            } else
-            {
-                using (StreamWriter sw = new StreamWriter(filePath, true))
-                {
-                    var newLine = $"{JMBG},{medicineId},{isDoctor}";
-                    sw.WriteLine(newLine);
-                }
-            }
-
-
-            return shoudBeAccepted;
-        }
-
-        public void RevokeMedicineAcceptanceByUser(string JMBG, int medicineId)
-        {
-            var filteredAcceptances = GetAllAcceptances().Where(x => x.JMBG != JMBG || x.MedicineId != medicineId).ToList();
-
             using (StreamWriter sw = new StreamWriter(filePath, false))
             {
                 sw.Write("");
@@ -105,28 +65,9 @@ namespace Apoteka.Repositories
 
             using (StreamWriter sw = new StreamWriter(filePath, true))
             {
-                foreach (var filteredAcceptance in filteredAcceptances)
+                foreach (var acceptance in acceptances)
                 {
-                    var newLine = $"{filteredAcceptance.JMBG},{filteredAcceptance.MedicineId},{filteredAcceptance.ByDoctor}";
-                    sw.WriteLine(newLine);
-                }
-            }
-        }
-
-        public void DeleteAllAcceptancesForMedicine(int medicineId)
-        {
-            List<Acceptance> filteredAcceptances = GetAllAcceptances().FindAll(acceptance => acceptance.MedicineId != medicineId);
-
-            using (StreamWriter sw = new StreamWriter(filePath, false))
-            {
-                sw.Write("");
-            }
-
-            using (StreamWriter sw = new StreamWriter(filePath, true))
-            {
-                foreach (var filteredAcceptance in filteredAcceptances)
-                {
-                    var newLine = $"{filteredAcceptance.JMBG},{filteredAcceptance.MedicineId},{filteredAcceptance.ByDoctor}";
+                    var newLine = $"{acceptance.JMBG},{acceptance.MedicineId},{acceptance.ByDoctor}";
                     sw.WriteLine(newLine);
                 }
             }

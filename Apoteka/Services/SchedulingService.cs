@@ -1,22 +1,18 @@
 ﻿using Apoteka.Models;
 using Apoteka.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Apoteka.Services
 {
     public class SchedulingService : ISchedulingService
     {
         private readonly ISchedulingRepository schedulingRepository;
-        private readonly IMedicineRepository medicineRepository;
+        private readonly IMedicineService medicineService;
 
-        public SchedulingService(ISchedulingRepository schedulingRepository, IMedicineRepository medicineRepository)
+        public SchedulingService(ISchedulingRepository schedulingRepository, IMedicineService medicineService)
         {
             this.schedulingRepository = schedulingRepository;
-            this.medicineRepository = medicineRepository;
+            this.medicineService = medicineService;
         }
 
         public int OrderAllMedicinesScheduledForTodayOrForPreviousPeriod()
@@ -25,17 +21,16 @@ namespace Apoteka.Services
 
             schedules.ForEach(schedule =>
             {
-                medicineRepository.IncreaseMedicineQuantity(schedule.MedicineId, schedule.Quantity);
+                medicineService.IncreaseMedicineQuantity(schedule.MedicineId, schedule.Quantity);
+                schedulingRepository.RemoveScheduledOrder(schedule);
             });
-
-            schedulingRepository.RemoveAllSchedulesForTodayOrPreviousPeriod();
 
             return schedules.Count;
         }
 
         public void ScheduleOrderingForDate(ScheduledMedicineOrdering scheduledMedicineOrdering)
         {
-            schedulingRepository.ScheduleOrderingForDate(scheduledMedicineOrdering);
+            schedulingRepository.AddNewScheduledOrder(scheduledMedicineOrdering);
         }
     }
 }

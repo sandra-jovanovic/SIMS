@@ -125,7 +125,7 @@ namespace Apoteka.Services
         public void IncreaseMedicineQuantity(int medicineId, int quantity)
         {
             Medicine medicine = medicineRepository.GetAllMedicines().Find(m => m.Id == medicineId);
-            medicine.Quantity = quantity;
+            medicine.Quantity += quantity;
             medicineRepository.UpdateMedicine(medicine);
         }
 
@@ -165,6 +165,7 @@ namespace Apoteka.Services
             medicineToUpdate.Refused = false;
             medicineToUpdate.RefusedBy = string.Empty;
             medicineToUpdate.ReasonForRefusing = string.Empty;
+            medicineRepository.UpdateMedicine(medicineToUpdate);
 
             acceptanceService.AcceptMedicineByUser(user.JMBG, medicineId, user.Role == UserRole.Lekar);
         }

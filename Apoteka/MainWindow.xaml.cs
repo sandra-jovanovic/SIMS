@@ -46,7 +46,7 @@ namespace Apoteka
             IUserService userService = new UserService(userRepository);
             IAcceptanceService acceptanceService = new AcceptanceService(acceptanceRepository);
             IMedicineService medicineService = new MedicineService(medicineRepository, acceptanceService);
-            ISchedulingService schedulingService = new SchedulingService(schedulingRepository, medicineRepository);
+            ISchedulingService schedulingService = new SchedulingService(schedulingRepository, medicineService);
             IIngredientsService ingredientsService = new IngredientsService(ingredientRepository);
 
             UserController userController = new UserController(userService);

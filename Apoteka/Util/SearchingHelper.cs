@@ -21,7 +21,7 @@ namespace Apoteka.Util
                     {
                         medicinesBeforeOrFilter = medicinesBeforeOrFilter.Intersect(medicines.Where(m => m.Ingredients.ContainsKey(partAnd)));
                     }
-                    filteredMedicines = filteredMedicines.Union(medicinesBeforeOrFilter);
+                    filteredMedicines = filteredMedicines.Union(medicinesBeforeOrFilter).ToList();
                 }
             }
             catch
